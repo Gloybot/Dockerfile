@@ -1,14 +1,13 @@
 FROM alpine:3.8
-MAINTAINER suce <suce222@163.com>
+MAINTAINER oldiy <oldiy@163.com>
 
 WORKDIR /
-#https://github.com/cnlh/nps/releases
 ENV NPC_VERSION 0.21.0
 ENV ARCH arm64
 ENV SYSTEM linux
 
 RUN set -x && \
-	wget --no-check-certificate https://github.com/cnlh/nps/releases/download/v${NPC_VERSION}/${SYSTEM}_${ARCH}_client.tar.gz && \ 
+	wget --no-check-certificate https://github.com/ehang-io/nps/releases/download/v${NPC_VERSION}/${SYSTEM}_${ARCH}_client.tar.gz && \ 
 	mkdir \npc && \
 	mv ${SYSTEM}_${ARCH}_client* /npc && \
 	cd /npc && \
