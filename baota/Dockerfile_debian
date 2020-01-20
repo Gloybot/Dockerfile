@@ -1,0 +1,25 @@
+FROM debian
+MAINTAINER SUCE <suce222@163.com>
+
+RUN /bin/sh -c mkdir -p /www/letsencrypt && \
+	ln -s /www/letsencrypt /etc/letsencrypt && \ 
+	rm -f /etc/init.d && \
+	mkdir /www/init.d && \
+	ln -s /www/init.d /etc/init.d && \
+	chmod +x /entrypoint.sh && \
+	mkdir /www/wwwroot
+ 
+RUN /bin/sh -c cd /home && \
+	apt-get update && \ 
+	apt-get install -y  wget openssh-server && \
+	echo 'Port 63322' > /etc/ssh/sshd_config && \
+	wget -O install.sh http://download.bt.cn/install/install_6.0.sh && \
+	echo y | bash install.sh && \
+	python /set_default.py && \
+	echo '["linuxsys", "webssh"]' > /www/server/panel/config/index.json
+  
+WORKDIR /www/wwwroot
+
+CMD ["/bin/sh" "-c" "/entrypoint.sh"]
+
+HEALTHCHECK &{["CMD-SHELL" "curl -fs http://localhost:8888/ && curl -fs http://localhost/ || exit 1"] "5s" "3s" "0s" '\x00'}
